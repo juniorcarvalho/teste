@@ -1,3 +1,10 @@
+.idea
+*.sqlite3
+*.pyc
+__pycache__
+.ipynb_checkpoints/
+staticfiles
 .venv
 *.csv
-*.sqlite3
+
+
