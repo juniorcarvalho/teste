@@ -37,6 +37,67 @@
         </div>
     </div>
 
+    <hr>
+
+    <div class="row">
+        <div class="col-md-6">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <button type="submit" name="sql1" class="btn btn-primary">SQL 1</button>
+            </form>
+            {% if result_sql_1 %}
+                <table class="table table-hover table-bordered table-dark">
+                    <thead>
+                    <tr>
+                        <th scope="col">Data Distrato</th>
+                        <th scope="col">Quantidade</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for r in result_sql_1 %}
+                        <tr>
+                            <td>{{ r.data_distrato }}</td>
+                            <td>{{ r.tot }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-md-12">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <button type="submit" name="sql2" class="btn btn-primary">SQL 2</button>
+            </form>
+            {% if result_sql_2 %}
+                <table class="table table-hover table-bordered table-dark">
+                    <thead>
+                    <tr>
+                        <th scope="col">Contrato</th>
+                        <th scope="col">Total</th>
+                        <th scope="col">Total Pago</th>
+                        <th scope="col">Saldo Devedor</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for r in result_sql_2 %}
+                        <tr>
+                            <td>{{ r.nro_titulo }}</td>
+                            <td>{{ r.total_contrato|floatformat:2 }}</td>
+                            <td>{{ r.total_pago|floatformat:2 }}</td>
+                            <td>{{ r.saldo_devedor|floatformat:2 }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+    </div>
 </div>
 </body>
 
