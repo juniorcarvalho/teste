@@ -56,7 +56,11 @@
                     <tbody>
                     {% for r in result_sql_1 %}
                         <tr>
-                            <td>{{ r.data_distrato }}</td>
+                            <td>
+                                {% if r.data_distrato %}
+                                    {{ r.data_distrato }}
+                                {% endif %}
+                            </td>
                             <td>{{ r.tot }}</td>
                         </tr>
                     {% endfor %}
@@ -79,9 +83,12 @@
                     <thead>
                     <tr>
                         <th scope="col">Contrato</th>
-                        <th scope="col">Total</th>
+                        <th scope="col">Total Contrato</th>
                         <th scope="col">Total Pago</th>
+                        <th scope="col">Total Amortizado</th>
                         <th scope="col">Saldo Devedor</th>
+                        <th scope="col">Valor Inadiplência</th>
+                        <th scope="col">Dias Inadiplência</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -90,7 +97,10 @@
                             <td>{{ r.nro_titulo }}</td>
                             <td>{{ r.total_contrato|floatformat:2 }}</td>
                             <td>{{ r.total_pago|floatformat:2 }}</td>
+                            <td>{{ r.total_pago_amortizado|floatformat:2 }}</td>
                             <td>{{ r.saldo_devedor|floatformat:2 }}</td>
+                            <td>{{ r.valor_inad|floatformat:2 }}</td>
+                            <td>{{ r.dias_inad }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>

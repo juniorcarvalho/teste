@@ -19,12 +19,28 @@ def index(request):
             context['filename'] = uploaded_file_url
 
         if 'sql1' in request.POST:
-            context['result_sql_1'] = Titulo.objects.raw(
-                'select id,data_distrato, count(*) as tot from core_titulo group by data_distrato')
+            sqltext=' select id, '+\
+                    '        ifnull(data_distrato,"") as data_distrato, '+\
+                    '        sum(1) as tot ' +\
+                    'from core_titulo '+\
+                    'group by data_distrato'
+            context['result_sql_1'] = Titulo.objects.raw(sqltext)
 
         if 'sql2' in request.POST:
-            context['result_sql_2'] = Titulo.objects.raw(
-                'select id,nro_titulo,sum(valor_original) as total_contrato,sum(valor_liquido) as total_pago,sum(saldo_devedor) as saldo_devedor from core_titulo group by 2'
-            )
+            sqltext = 'select c1.id, ' + \
+                      '       c1.nro_titulo, ' + \
+                      '       c1.valor_contrato_total as total_contrato, ' + \
+                      '       (select sum(valor_original) from core_titulo as c2 ' + \
+                      '        where c2.unidade_id=c1.unidade_id and ifnull(c2.data_baixa,0)<>0) as total_pago, ' + \
+                      '        0 as total_pago_amortizado, ' + \
+                      '        (select sum(c3.valor_original) from core_titulo as c3 ' + \
+                      '         where c3.unidade_id=c1.unidade_id and ifnull(c3.data_baixa,0)=0) as saldo_devedor, ' + \
+                      '        (select sum(c4.valor_original) from core_titulo c4 ' + \
+                      '         where c4.unidade_id=c1.unidade_id and ifnull(c4.data_baixa,0)=0) as valor_inad, ' + \
+                      '        (select ifnull(sum(current_date-c5.vencimento),0) from core_titulo c5 ' + \
+                      '         where c5.unidade_id=c1.unidade_id and ifnull(c5.data_baixa,0)=0) as dias_inad ' + \
+                      'from core_titulo c1' + \
+                      ' group by 2'
+            context['result_sql_2'] = Titulo.objects.raw(sqltext)
 
     return render(request, 'index.html', context=context)
